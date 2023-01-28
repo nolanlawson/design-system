@@ -289,7 +289,8 @@
   "dependencies": {
     "fsevents": "*",
     "selenium-webdriver": "^4.8.0",
-    "snyk": "^1.667.0"
+    "snyk": "^1.667.0",
+    "theo": "^8.1.5"
   },
   "peerDependencies": {
     "postcss": "^8.3.5"

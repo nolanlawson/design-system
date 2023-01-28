@@ -134,14 +134,18 @@ $_sizes: (
   $columnSizes: 2, 3, 4, 5, 6, 7, 8, 12;
 
   $result: '';
-
+  $first: true;
   @each $prefix in $prefixes {
     @each $size in $sizes {
-      $result: "#{$result} .#{$prefix}#{$size}";
+      @if (not $first) {
+        $result: "#{$result}, "
+      }
+      $result: "#{$result}.#{$prefix}#{$size}";
+      $first: false;
     }
     @each $columnSize in $columnSizes {
       @for $i from 1 through $columnSize {
-        $result: "#{$result} .#{$prefix}#{$i}-of-#{$columnSize}";
+        $result: "#{$result}, .#{$prefix}#{$i}-of-#{$columnSize}";
       }
     }
   }

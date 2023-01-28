@@ -488,10 +488,15 @@
   $sizes: '-medium', '-large', '';
 
   $result: '';
+  $first: true;
   @each $size in $sizes {
     @each $type in $types {
       @each $prefix in $prefixes {
-        $result: "#{$result} .#{$prefix}#{$type}#{$size}";
+        @if (not $first) {
+          $result: "#{$result}, "
+        }
+        $result: "#{$result}.#{$prefix}#{$type}#{$size}";
+        $first: false;
       }
     }
   }
