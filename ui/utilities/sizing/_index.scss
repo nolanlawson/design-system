@@ -5,7 +5,7 @@
 /// @type map
 /// @private
 $_sizes: (
-  'xxx-small,': $size-xxx-small,
+  'xxx-small': $size-xxx-small,
   'xx-small': $size-xx-small,
   'x-small': $size-x-small,
   'small': $size-small,
@@ -14,6 +14,54 @@ $_sizes: (
   'x-large': $size-x-large,
   'xx-large': $size-xx-large
 );
+
+// All SLDS size classes like `slds-size--medium` and `slds-size--medium-1-of-12` in one string.
+// This is faster for style calculation than `[class*="slds-size_"]`.
+@function all-sizes () {
+  $prefixes: 'slds-size_', 'slds-size--';
+  $columnSizes: 2, 3, 4, 5, 6, 7, 8, 12;
+
+  $result: '';
+  $first: true;
+  @each $prefix in $prefixes {
+    @each $size, $width in $_sizes {
+      @if (not $first) {
+        $result: "#{$result}, "
+      }
+      $first: false;
+      $result: "#{$result}.#{$prefix}#{$size}";
+    }
+    @each $columnSize in $columnSizes {
+      @for $i from 1 through $columnSize {
+        $result: "#{$result}, .#{$prefix}#{$i}-of-#{$columnSize}";
+      }
+    }
+  }
+
+  @return $result;
+}
+
+// All SLDS classes like `slds-small-size_medium` in one string.
+// This is faster for style calculation than `[class*="slds-#{$size}-size_"]`
+@function all-responsive-sizes () {
+  $prefix: 'slds-';
+  $infixes: '-size_', '-size--';
+
+  $result: '';
+  $first: true;
+  @each $infix in $infixes {
+    @each $size, $width in $_sizes {
+      @each $otherSize, $otherWidth in $_sizes {
+        @if (not $first) {
+          $result: "#{$result}, "
+        }
+        $first: false;
+        $result: "#{$result}.#{$prefix}#{$size}#{$infix}#{$otherSize}";
+      }
+    }
+  }
+  @return $result;
+}
 
 /**
  * @selector .slds-size_small
@@ -63,8 +111,7 @@ $_sizes: (
   @media (min-width: #{pem($breakpoint)}) {
 
     // Fixes issue when sizing is used with slds-col
-    [class*="slds-#{$size}-size_"],
-    [class*="slds-#{$size}-size--"] {
+    #{all-responsive-sizes()} {
       flex: none;
     }
 
@@ -96,8 +143,7 @@ $_sizes: (
   @media (max-width: #{pem($breakpoint)}) {
 
     // Fixes issue when sizing is used with slds-col
-    [class*="slds-max-#{$size}-size_"],
-    [class*="slds-max-#{$size}-size--"] {
+    #{all-responsive-sizes()} {
       flex: none;
     }
 
@@ -125,31 +171,6 @@ $_sizes: (
       }
     }
   }
-}
-
-// All SLDS size classes in one string. This is faster for style calculation than `[class*="slds-size_"]`.
-@function all-sizes () {
-  $prefixes: 'slds-size_', 'slds-size--';
-  $columnSizes: 2, 3, 4, 5, 6, 7, 8, 12;
-
-  $result: '';
-  $first: true;
-  @each $prefix in $prefixes {
-    @each $size, $width in $_sizes {
-      @if (not $first) {
-        $result: "#{$result}, "
-      }
-      $result: "#{$result}.#{$prefix}#{$size}";
-      $first: false;
-    }
-    @each $columnSize in $columnSizes {
-      @for $i from 1 through $columnSize {
-        $result: "#{$result}, .#{$prefix}#{$i}-of-#{$columnSize}";
-      }
-    }
-  }
-
-  @return $result;
 }
 
 // Fixes issue when sizing is used with slds-col
