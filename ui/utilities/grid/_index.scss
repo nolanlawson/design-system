@@ -482,6 +482,7 @@
 }
 
 // All slds-col_padded classes in one string. This is faster for style calculation than `[class*='slds-icon-action-']`.
+/// @private
 @function col-padded() {
   $prefixes: 'slds-col_padded', 'slds-col--padded';
   $types: '-around', '';
@@ -493,7 +494,7 @@
     @each $type in $types {
       @each $prefix in $prefixes {
         @if (not $first) {
-          $result: "#{$result}, "
+          $result: "#{$result}, ";
         }
         $result: "#{$result}.#{$prefix}#{$type}#{$size}";
         $first: false;

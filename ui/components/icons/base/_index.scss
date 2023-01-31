@@ -46,12 +46,13 @@
 }
 
 // All action icon classes in one string. This is faster for style calculation than `[class*='slds-icon-action-']`.
+/// @private
 @function action-icons() {
   $result: '';
   $first: true;
   @each $name in map-keys($bg-actions-map) {
     @if (not $first) {
-      $result: "#{$result}, "
+      $result: "#{$result}, ";
     }
     $result: "#{$result}.slds-icon-#{$name}";
     $first: false;

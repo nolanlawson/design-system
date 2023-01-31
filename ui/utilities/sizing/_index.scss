@@ -17,6 +17,7 @@ $_sizes: (
 
 // All SLDS size classes like `slds-size--medium` and `slds-size--medium-1-of-12` in one string.
 // This is faster for style calculation than `[class*="slds-size_"]`.
+/// @private
 @function all-sizes () {
   $prefixes: 'slds-size_', 'slds-size--';
   $columnSizes: 2, 3, 4, 5, 6, 7, 8, 12;
@@ -26,7 +27,7 @@ $_sizes: (
   @each $prefix in $prefixes {
     @each $size in map-keys($_sizes) {
       @if (not $first) {
-        $result: "#{$result}, "
+        $result: "#{$result}, ";
       }
       $first: false;
       $result: "#{$result}.#{$prefix}#{$size}";
@@ -44,6 +45,7 @@ $_sizes: (
 // All SLDS classes like `slds-small-size_medium` in one string.
 // Note that the first size is only a breakpoint size, and the second is all possible sizes.
 // This is faster for style calculation than `[class*="slds-#{$breakpointSize}-size_"]`
+/// @private
 @function all-responsive-sizes ($breakpointSize, $prefix) {
   $infixes: '-size_', '-size--';
 
@@ -52,7 +54,7 @@ $_sizes: (
   @each $infix in $infixes {
     @each $size in map-keys($_sizes) {
       @if (not $first) {
-        $result: "#{$result}, "
+        $result: "#{$result}, ";
       }
       $first: false;
       $result: "#{$result}.#{$prefix}#{$breakpointSize}#{$infix}#{$size}";
