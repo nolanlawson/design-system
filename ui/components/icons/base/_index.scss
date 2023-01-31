@@ -49,7 +49,7 @@
 @function action-icons() {
   $result: '';
   $first: true;
-  @each $name, $color in $bg-actions-map {
+  @each $name in map-keys($bg-actions-map) {
     @if (not $first) {
       $result: "#{$result}, "
     }

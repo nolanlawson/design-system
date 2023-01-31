@@ -24,7 +24,7 @@ $_sizes: (
   $result: '';
   $first: true;
   @each $prefix in $prefixes {
-    @each $size, $width in $_sizes {
+    @each $size in map-keys($_sizes) {
       @if (not $first) {
         $result: "#{$result}, "
       }
@@ -42,22 +42,20 @@ $_sizes: (
 }
 
 // All SLDS classes like `slds-small-size_medium` in one string.
-// This is faster for style calculation than `[class*="slds-#{$size}-size_"]`
-@function all-responsive-sizes () {
-  $prefix: 'slds-';
+// Note that the first size is only a breakpoint size, and the second is all possible sizes.
+// This is faster for style calculation than `[class*="slds-#{$breakpointSize}-size_"]`
+@function all-responsive-sizes ($breakpointSize, $prefix) {
   $infixes: '-size_', '-size--';
 
   $result: '';
   $first: true;
   @each $infix in $infixes {
-    @each $size, $width in $_sizes {
-      @each $otherSize, $otherWidth in $_sizes {
-        @if (not $first) {
-          $result: "#{$result}, "
-        }
-        $first: false;
-        $result: "#{$result}.#{$prefix}#{$size}#{$infix}#{$otherSize}";
+    @each $size in map-keys($_sizes) {
+      @if (not $first) {
+        $result: "#{$result}, "
       }
+      $first: false;
+      $result: "#{$result}.#{$prefix}#{$breakpointSize}#{$infix}#{$size}";
     }
   }
   @return $result;
@@ -111,7 +109,7 @@ $_sizes: (
   @media (min-width: #{pem($breakpoint)}) {
 
     // Fixes issue when sizing is used with slds-col
-    #{all-responsive-sizes()} {
+    #{all-responsive-sizes($size, 'slds-')} {
       flex: none;
     }
 
@@ -143,7 +141,7 @@ $_sizes: (
   @media (max-width: #{pem($breakpoint)}) {
 
     // Fixes issue when sizing is used with slds-col
-    #{all-responsive-sizes()} {
+    #{all-responsive-sizes($size, 'slds-max-')} {
       flex: none;
     }
 
